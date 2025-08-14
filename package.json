@@ -1,0 +1,18 @@
+{
+    "devDependencies": {
+        "@biomejs/biome": "1.9.4",
+        "tsx": "^4.19.4",
+        "typescript": "^5.8.3",
+        "zod": "^3.25.56",
+        "grit": "^0.2.5"
+    },
+    "scripts": {
+        "build": "pnpm exec tsc --declaration && pnpm exec tsc",
+        "start:server": "pnpm --filter @packages/server exec tsx main.ts",
+        "start:client": "pnpm --filter @packages/cli-client exec tsx main.ts"
+    },
+    "dependencies": {
+        "@packages/cli-client": "workspace:^",
+        "@packages/server": "workspace:^"
+    }
+}

@@ -1,10 +1,11 @@
 {
     "devDependencies": {
         "@biomejs/biome": "1.9.4",
+        "grit": "^0.2.5",
         "tsx": "^4.19.4",
         "typescript": "^5.8.3",
         "zod": "^3.25.56",
-        "grit": "^0.2.5"
+        "dotenv": "^17.2.1"
     },
     "scripts": {
         "build": "pnpm exec tsc --declaration && pnpm exec tsc",
@@ -14,5 +15,6 @@
     "dependencies": {
         "@packages/cli-client": "workspace:^",
         "@packages/server": "workspace:^"
-    }
+    },
+    "workspaces": ["./packages/*"]
 }

@@ -2,10 +2,15 @@
   "name": "@packages/server",
   "dependencies": {
     "@trpc/server": "^11.3.1",
+    "cors": "^2.8.5",
     "openai": "^5.3.0"
   },
   "scripts": {
     "build:types": "tsc --declaration",
-    "start": "pnpm exec tsx main.ts"
+    "start": "dotenv -e .env pnpm exec tsx main.ts"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/node": "^24.2.1"
   }
 }

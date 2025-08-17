@@ -1,5 +1,5 @@
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
-import type { AppRouter } from '../Server/Core/router';
+import type { AppRouter } from '@packages/server/src/router';
 
 const trpc = createTRPCClient<AppRouter>({
     links: [
@@ -9,9 +9,8 @@ const trpc = createTRPCClient<AppRouter>({
     ],
 });
 
-function runClient() {
-    const response = trpc.getWordDefinition.query('test');
-    console.log(response);
+async function runClient() {
+    return await trpc.getWordDefinition.query('test');
 }
 
-runClient();
+runClient().then((value) => console.log(value));

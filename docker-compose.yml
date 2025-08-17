@@ -7,7 +7,27 @@ services:
     ports: 
     - 11434:11434
     tty: true
+    networks:
+      - back
     restart: unless-stopped
 
+  voc-app:
+    build:
+      context: .
+    ports:
+      - 3000:3000
+    container_name: voc_app
+    env_file: ".env"
+    networks:
+      - back
+    develop:
+      watch:
+        - action: sync
+          path: ./packages/Server/out/
+          target: /app
+
+networks:
+  back:
+    driver: bridge
 volumes:
   ollama: {}

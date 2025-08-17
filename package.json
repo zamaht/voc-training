@@ -1,20 +1,25 @@
 {
     "devDependencies": {
         "@biomejs/biome": "1.9.4",
+        "dotenv": "^17.2.1",
+        "esbuild": "^0.25.9",
         "grit": "^0.2.5",
         "tsx": "^4.19.4",
         "typescript": "^5.8.3",
-        "zod": "^3.25.56",
-        "dotenv": "^17.2.1"
+        "zod": "^3.25.56"
     },
     "scripts": {
-        "build": "pnpm exec tsc --declaration && pnpm exec tsc",
-        "start:server": "pnpm --filter @packages/server exec tsx main.ts",
+        "build:server": "pnpm --filter @packages/server exec pnpm build:dev",
+        "prepare:server": "cp .env ./packages/Server/ && pnpm build:server",
+        "start:server": "pnpm prepare:server && pnpm --filter @packages/server exec pnpm start",
+        "start:server:dev": "pnpm --filter @packages/server exec pnpm dev",
         "start:client": "pnpm --filter @packages/cli-client exec tsx main.ts"
     },
     "dependencies": {
         "@packages/cli-client": "workspace:^",
         "@packages/server": "workspace:^"
     },
-    "workspaces": ["./packages/*"]
+    "workspaces": [
+        "./packages/*"
+    ]
 }

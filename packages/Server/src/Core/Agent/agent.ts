@@ -1,16 +1,9 @@
 import OpenAi from 'openai';
 import { z } from 'zod';
 
-import { ServerError } from '../error';
-import { resolveEnvPath } from '../utils';
-
-export const BaseOpenAiUrl = z.string().url().endsWith('v1').brand('open_ai');
-export type BaseOpenAiUrl = z.infer<typeof BaseOpenAiUrl>;
+import type { BaseOpenAiUrl, OpenAiApiKey } from '@packages/server/src/Core/serverEnv';
 
 type AgentModel = 'llama2';
-
-export const ApiKey = z.string().brand('api_key');
-export type ApiKey = 'ollama' | z.infer<typeof ApiKey>;
 
 export const SystemPrompt = z.string().brand('system_prompt');
 export type SystemPrompt = z.infer<typeof SystemPrompt>;
@@ -18,13 +11,15 @@ export type SystemPrompt = z.infer<typeof SystemPrompt>;
 type AgentConfig = {
     baseUrl: BaseOpenAiUrl;
     model: AgentModel;
-    apiKey: ApiKey;
+    apiKey: OpenAiApiKey;
     basePrompt: SystemPrompt;
 };
 
 export class Agent {
-    client: OpenAi;
-    model: AgentModel;
+    private client: OpenAi;
+    private model: AgentModel;
+    private basePrompt: SystemPrompt;
+
     constructor(agentConfig: AgentConfig) {
         this.client = new OpenAi({
             baseURL: agentConfig.baseUrl,
@@ -32,12 +27,18 @@ export class Agent {
         });
 
         this.model = agentConfig.model;
+        this.basePrompt = agentConfig.basePrompt;
     }
 
-    public async ask(inputMessage: string) {
+    public async ask(inputMessage: string): Promise<string | null> {
         const response = await this.client.chat.completions.create({
             model: this.model,
-            messages: [{ role: 'user', content: inputMessage }],
+            messages: [
+                { role: 'system', content: this.basePrompt },
+                { role: 'user', content: inputMessage },
+            ],
         });
+
+        return response.choices[0].message.content;
     }
 }

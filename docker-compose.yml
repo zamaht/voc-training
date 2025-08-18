@@ -5,10 +5,10 @@ services:
       - ollama:/root/.ollama
     container_name: dictionary_ollama
     ports: 
-    - 11434:11434
-    tty: true
+      - 11434:11434
     networks:
       - back
+    tty: true
     restart: unless-stopped
 
   voc-app:
@@ -23,8 +23,10 @@ services:
     develop:
       watch:
         - action: sync
-          path: ./packages/Server/out/
+          path: ./packages/Server
           target: /app
+        - action: rebuild
+          path: package.json
 
 networks:
   back:

@@ -14,7 +14,7 @@ export type Definition = z.infer<typeof Definition>;
 
 export async function getWordDefinition(word: Word) {
     const serverEnv = getServerEnv();
-    console.log(`SEVER ENV= ${serverEnv}`);
+    console.log(`SEVER ENV= ${JSON.stringify(serverEnv)}`);
     const agent = new Agent({
         basePrompt: SystemPrompt.parse(DEFINITION_FINDER_SYSTEM_PROMPT),
         baseUrl: serverEnv.ollamaBaseUrl,

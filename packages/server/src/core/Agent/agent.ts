@@ -1,7 +1,7 @@
 import OpenAi from 'openai';
 import { z } from 'zod';
 
-import type { BaseOpenAiUrl, OpenAiApiKey } from '@packages/server/src/Core/serverEnv';
+import type { BaseOpenAiUrl, OpenAiApiKey } from '@packages/server/src/core/serverEnv';
 
 type AgentModel = 'llama2';
 

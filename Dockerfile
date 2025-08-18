@@ -6,6 +6,6 @@ RUN corepack enable
 WORKDIR /app
 
 FROM base AS dev
-COPY ./packages/Server/ .
+COPY ./packages/server/ .
 RUN pnpm install
 CMD pnpm start

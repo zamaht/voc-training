@@ -2,7 +2,7 @@ import cors from 'cors';
 
 import { initTRPC } from '@trpc/server';
 import { createHTTPServer } from '@trpc/server/adapters/standalone';
-import { Word, getWordDefinition } from '@packages/server/src/Domain/VocabBuilder/public';
+import { Word, getWordDefinition } from '@packages/server/src/domain/VocabBuilder/public';
 
 const t = initTRPC.create();
 

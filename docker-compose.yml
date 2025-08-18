@@ -11,6 +11,23 @@ services:
     tty: true
     restart: unless-stopped
 
+  postregres:
+    image: postgres
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    container_name: postgres_db
+    ports:
+      - 5432:5432
+    volumes:
+      - db:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - back
+
   voc-app:
     build:
       context: .
@@ -33,3 +50,4 @@ networks:
     driver: bridge
 volumes:
   ollama: {}
+  db: {}

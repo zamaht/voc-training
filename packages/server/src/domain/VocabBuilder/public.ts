@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
-import { getServerEnv } from '@packages/server/src/Core/serverEnv';
+import { getServerEnv } from '@packages/server/src/core/serverEnv';
 
-import { Agent, SystemPrompt } from '@packages/server/src/Core/Agent/agent';
+import { Agent, SystemPrompt } from '@packages/server/src/core/Agent/agent';
 
 import { DEFINITION_FINDER_SYSTEM_PROMPT } from './prompt';
 

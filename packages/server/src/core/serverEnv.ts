@@ -13,9 +13,13 @@ export type ServerPort = z.infer<typeof ServerPort>;
 const OpenAiApiKey = z.string().brand('api_key');
 export type OpenAiApiKey = 'ollama' | z.infer<typeof OpenAiApiKey>;
 
+const PostgresDbHost = z.string().brand('postgres_host');
+export type PostgresDbHost = z.infer<typeof PostgresDbHost>;
+
 export type ServerEnv = Readonly<{
     ollamaBaseUrl: BaseOpenAiUrl;
     serverPort: ServerPort;
+    postgresDbHost: PostgresDbHost;
 }>;
 
 function resolveEnvPath() {
@@ -34,15 +38,10 @@ const serverEnv = createServerEnv();
 function createServerEnv(): ServerEnv {
     resolveEnvPath();
 
-    const env = `
-DEBUG Env variables
-
-OLLAMA_BASE_URL= ${process.env.OLLAMA_BASE_URL}
-SERVER_PORT= ${process.env.SERVER_PORT}
-`;
     return Object.freeze({
         ollamaBaseUrl: BaseOpenAiUrl.parse(process.env.OLLAMA_BASE_URL),
         serverPort: ServerPort.parse(process.env.SERVER_PORT),
+        postgresDbHost: PostgresDbHost.parse(process.env.POSTGRES_HOST),
     });
 }
 

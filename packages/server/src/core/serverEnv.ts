@@ -13,14 +13,23 @@ export type ServerPort = z.infer<typeof ServerPort>;
 const OpenAiApiKey = z.string().brand('api_key');
 export type OpenAiApiKey = 'ollama' | z.infer<typeof OpenAiApiKey>;
 
-const PostgresDbHost = z.string().brand('postgres_host');
-export type PostgresDbHost = z.infer<typeof PostgresDbHost>;
+const PostgresHost = z.string().brand('postgres_host');
+export type PostgresHost = z.infer<typeof PostgresHost>;
 
-export type ServerEnv = Readonly<{
-    ollamaBaseUrl: BaseOpenAiUrl;
-    serverPort: ServerPort;
-    postgresDbHost: PostgresDbHost;
-}>;
+const PostgresUrl = z.string().brand('postgres_url');
+export type PostgresUrl = z.infer<typeof PostgresUrl>;
+
+const PostgresPassword = z.string().brand('postgres_password');
+export type PostgresPassword = z.infer<typeof PostgresPassword>;
+
+const PostgresUser = z.string().brand('postgres_user');
+export type PostgresUser = z.infer<typeof PostgresUser>;
+
+const PostgresDb = z.string().brand('postgres_db');
+export type PostgresDb = z.infer<typeof PostgresDb>;
+
+const PostgresPort = z.string().brand('postgres_port');
+export type PostgresPort = z.infer<typeof PostgresPort>;
 
 function resolveEnvPath() {
     const envFilePath = path.resolve(__dirname, '../../.env');
@@ -33,18 +42,54 @@ function resolveEnvPath() {
     dotenv.config();
 }
 
-const serverEnv = createServerEnv();
+type PostgresEnv = Readonly<{
+    host: PostgresHost;
+    user: PostgresUser;
+    password: PostgresPassword;
+    db: PostgresDb;
+    port: PostgresPort;
+}>;
 
-function createServerEnv(): ServerEnv {
+export type ServerEnv = Readonly<{
+    ollamaBaseUrl: BaseOpenAiUrl;
+    serverPort: ServerPort;
+}>;
+
+type AppEnv = {
+    public: ServerEnv;
+    postgres: {
+        url: PostgresUrl;
+    };
+};
+
+const env = createAppEnv();
+
+function createAppEnv(): AppEnv {
     resolveEnvPath();
 
+    const { host, db, password, port, user } = {
+        host: PostgresHost.parse(process.env.POSTGRES_HOST),
+        db: PostgresDb.parse(process.env.POSTGRES_DB),
+        password: PostgresPassword.parse(process.env.POSTGRES_PASSWORD),
+        port: PostgresPort.parse(process.env.POSTGRES_PORT),
+        user: PostgresUser.parse(process.env.POSTGRES_USER),
+    } as const satisfies PostgresEnv;
+
     return Object.freeze({
-        ollamaBaseUrl: BaseOpenAiUrl.parse(process.env.OLLAMA_BASE_URL),
-        serverPort: ServerPort.parse(process.env.SERVER_PORT),
-        postgresDbHost: PostgresDbHost.parse(process.env.POSTGRES_HOST),
-    });
+        public: {
+            ollamaBaseUrl: BaseOpenAiUrl.parse(process.env.OLLAMA_BASE_URL),
+            serverPort: ServerPort.parse(process.env.SERVER_PORT),
+        },
+        postgres: {
+            url: PostgresUrl.parse(`psql://${user}:${password}@${host}:${port}/${db}`),
+        },
+    } as const satisfies AppEnv);
 }
 
 export function getServerEnv(): ServerEnv {
-    return serverEnv;
+    return env.public;
+}
+
+export function postgresUrl(): PostgresUrl {
+    return env.postgres.url;
 }

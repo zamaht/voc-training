@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import type { BaseOpenAiUrl, OpenAiApiKey } from '@packages/server/src/core/serverEnv';
 
-type AgentModel = 'llama2';
+type AgentModel = 'llama2' | 'tinyllama';
 
 export const SystemPrompt = z.string().brand('system_prompt');
 export type SystemPrompt = z.infer<typeof SystemPrompt>;

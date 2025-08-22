@@ -18,7 +18,7 @@ export async function getWordDefinition(word: Word) {
     const agent = new Agent({
         basePrompt: SystemPrompt.parse(DEFINITION_FINDER_SYSTEM_PROMPT),
         baseUrl: serverEnv.ollamaBaseUrl,
-        model: 'llama2',
+        model: 'tinyllama',
         apiKey: 'ollama',
     });
     return await agent.ask(`Find the best sentence that defines the following word: ${word}`);

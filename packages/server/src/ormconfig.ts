@@ -1,10 +1,11 @@
 import { DataSource } from 'typeorm';
-import { getServerEnv } from './core/serverEnv';
+import { postgresUrl } from './core/serverEnv';
+import { UserSchema } from './core/schema/user';
 
 export const AppDataSource = new DataSource({
     type: 'postgres',
     synchronize: true,
-    host: getServerEnv().postgresDbHost,
+    url: postgresUrl(),
     logging: true,
-    entities: [],
+    entities: [UserSchema],
 });
